@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUMAN HEALTH - Your Health Partner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1><i class="fas fa-heartbeat"></i> HUMAN HEALTH</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="working-days.html">Working Days</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="medical-records.html">Medical Records</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content animate__animated animate__fadeIn">
+            <h1 class="animate__animated animate__fadeInDown">Your Health, Our Priority</h1>
+            <p class="animate__animated animate__fadeInUp">Experience world-class healthcare services tailored to your needs</p>
+            <a href="#services" class="cta-button animate__animated animate__pulse animate__infinite">Get Started</a>
+        </div>
+        <div class="hero-image animate__animated animate__fadeInRight">
+            <img src="flat.jpg" alt="Healthcare">
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <h2 class="animate__animated animate__fadeIn">Why Choose Us</h2>
+        <div class="features-grid">
+            <div class="feature-card animate__animated animate__fadeInUp">
+                <i class="fas fa-user-md fa-3x"></i>
+                <h3>Expert Doctors</h3>
+                <p>Highly qualified medical professionals</p>
+            </div>
+            <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <i class="fas fa-clock fa-3x"></i>
+                <h3>24/7 Service</h3>
+                <p>Round the clock medical assistance</p>
+            </div>
+            <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                <i class="fas fa-heartbeat fa-3x"></i>
+                <h3>Quality Care</h3>
+                <p>State-of-the-art medical facilities</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services-preview">
+        <h2 class="animate__animated animate__fadeIn">Our Services</h2>
+        <div class="services-slider">
+            <div class="service-slide animate__animated animate__fadeInLeft">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Health Checkup">
+                <h3>Health Checkups</h3>
+                <p>Comprehensive health assessments</p>
+                <a href="services.html#checkup" class="service-link">Learn More</a>
+            </div>
+            <div class="service-slide animate__animated animate__fadeInUp">
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Medication">
+                <h3>Medication</h3>
+                <p>Expert medical care</p>
+                <a href="services.html#medication" class="service-link">Learn More</a>
+            </div>
+            <div class="service-slide animate__animated animate__fadeInRight">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Record Management">
+                <h3>Record Management</h3>
+                <p>Secure medical records</p>
+                <a href="services.html#records" class="service-link">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section animate__animated animate__fadeIn">
+        <h2>Ready to Get Started?</h2>
+        <p>Book your appointment today and take the first step towards better health</p>
+        <a href="services.html#appointment" class="cta-button">Book Appointment</a>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <p>Delivering quality healthcare services to you all.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeIn');
+                }
+            });
+        });
+
+        document.querySelectorAll('.feature-card, .service-slide').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html> 

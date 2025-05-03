@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - HUMAN HEALTH</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1><i class="fas fa-heartbeat"></i> HUMAN HEALTH</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="working-days.html">Working Days</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="medical-records.html">Medical Records</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="checkup" class="services-detailed">
+        <h2>Our Healthcare Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-stethoscope fa-3x"></i>
+                <h3>Health Checkups</h3>
+                <p>Comprehensive health assessments including:</p>
+                <ul>
+                    <li>General health checkup</li>
+                    <li>Blood pressure monitoring</li>
+                    <li>Cholesterol screening</li>
+                    <li>Diabetes screening</li>
+                </ul>
+                <button onclick="showAppointmentForm('Health Checkup')" class="service-button">Book Checkup</button>
+            </div>
+
+            <div id="medication" class="service-card">
+                <i class="fas fa-pills fa-3x"></i>
+                <h3>Medication</h3>
+                <p>Expert medical care including:</p>
+                <ul>
+                    <li>Prescription management</li>
+                    <li>Medication reviews</li>
+                    <li>Treatment plans</li>
+                    <li>Follow-up care</li>
+                </ul>
+                <button onclick="showAppointmentForm('Medication')" class="service-button">Get Treatment</button>
+            </div>
+
+            <div id="records" class="service-card">
+                <i class="fas fa-file-medical fa-3x"></i>
+                <h3>Record Management</h3>
+                <p>Secure medical records including:</p>
+                <ul>
+                    <li>Digital health records</li>
+                    <li>Medical history tracking</li>
+                    <li>Test results storage</li>
+                    <li>Secure access portal</li>
+                </ul>
+                <button onclick="showRegistrationForm()" class="service-button">Register for Access</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Appointment Form Modal -->
+    <div id="appointment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Book Appointment</h2>
+            <form id="appointment-form" class="appointment-form">
+                <input type="hidden" id="service-type" name="service-type">
+                <div class="form-group">
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" placeholder="Your Phone" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="notes" name="notes" placeholder="Additional Notes"></textarea>
+                </div>
+                <button type="submit" class="submit-button">Book Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Registration Form Modal -->
+    <div id="registration-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Register for Medical Records Access</h2>
+            <form id="registration-form" class="registration-form">
+                <div class="form-group">
+                    <input type="text" id="reg-name" name="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="reg-email" name="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="reg-phone" name="phone" placeholder="Phone Number" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="reg-dob" name="dob" placeholder="Date of Birth" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="reg-password" name="password" placeholder="Create Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="reg-confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="submit-button">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Delivering quality healthcare services to you all.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="appointments.js"></script>
+    <script>
+        // Modal functionality
+        function showAppointmentForm(serviceType) {
+            document.getElementById('service-type').value = serviceType;
+            document.getElementById('appointment-modal').style.display = 'block';
+        }
+
+        function showRegistrationForm() {
+            document.getElementById('registration-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('appointment-modal').style.display = 'none';
+            document.getElementById('registration-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                closeModal();
+            }
+        }
+
+        // Registration form handling
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            const userData = {
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                phone: document.getElementById('reg-phone').value,
+                dob: document.getElementById('reg-dob').value
+            };
+
+            // Store user data in localStorage
+            localStorage.setItem('registeredUsers', JSON.stringify([
+                ...JSON.parse(localStorage.getItem('registeredUsers') || '[]'),
+                userData
+            ]));
+
+            alert('Registration successful! You can now access your medical records.');
+            this.reset();
+            closeModal();
+        });
+    </script>
+</body>
+</html> 

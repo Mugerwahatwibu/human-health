@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records - HUMAN HEALTH</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1><i class="fas fa-heartbeat"></i> HUMAN HEALTH</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="working-days.html">Working Days</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="medical-records-section">
+        <div class="records-container">
+            <div id="login-section" class="records-login">
+                <h2>Access Your Medical Records</h2>
+                <form id="records-login-form" class="records-form">
+                    <div class="form-group">
+                        <input type="email" id="login-email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="login-password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="submit-button">Login</button>
+                </form>
+                <p class="register-link">Don't have access? <a href="services.html#records">Register here</a></p>
+            </div>
+
+            <div id="records-display" class="records-display" style="display: none;">
+                <div class="records-header">
+                    <h2>Your Medical Records</h2>
+                    <button onclick="logout()" class="logout-button">Logout</button>
+                </div>
+                <div class="records-content">
+                    <div class="records-summary">
+                        <h3>Medical Summary</h3>
+                        <div id="medical-summary" class="summary-content">
+                            <!-- Content will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="records-history">
+                        <h3>Visit History</h3>
+                        <div id="visit-history" class="history-content">
+                            <!-- Content will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="records-prescriptions">
+                        <h3>Prescriptions</h3>
+                        <div id="prescriptions" class="prescriptions-content">
+                            <!-- Content will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <p>Delivering quality healthcare services to you all.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('currentUser');
+            if (loggedInUser) {
+                showRecords();
+            }
+        });
+
+        // Handle login form submission
+        document.getElementById('records-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Get registered users
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const user = users.find(u => u.email === email);
+
+            if (user) {
+                // In a real application, you would verify the password securely
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showRecords();
+            } else {
+                alert('Invalid email or password');
+            }
+        });
+
+        function showRecords() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('records-display').style.display = 'block';
+            loadUserRecords();
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('records-display').style.display = 'none';
+        }
+
+        function loadUserRecords() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) return;
+
+            // Get appointments for this user
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const userAppointments = appointments.filter(apt => apt.email === user.email);
+
+            // Display medical summary
+            const summaryContent = document.getElementById('medical-summary');
+            summaryContent.innerHTML = `
+                <div class="summary-item">
+                    <strong>Name:</strong> ${user.name}
+                </div>
+                <div class="summary-item">
+                    <strong>Email:</strong> ${user.email}
+                </div>
+                <div class="summary-item">
+                    <strong>Phone:</strong> ${user.phone}
+                </div>
+            `;
+
+            // Display visit history
+            const historyContent = document.getElementById('visit-history');
+            if (userAppointments.length > 0) {
+                historyContent.innerHTML = userAppointments.map(apt => `
+                    <div class="history-item">
+                        <div class="history-date">${new Date(apt.date).toLocaleDateString()}</div>
+                        <div class="history-service">${apt.service}</div>
+                        <div class="history-status">${apt.status}</div>
+                    </div>
+                `).join('');
+            } else {
+                historyContent.innerHTML = '<p>No visit history available</p>';
+            }
+
+            // Display prescriptions (mock data for demonstration)
+            const prescriptionsContent = document.getElementById('prescriptions');
+            prescriptionsContent.innerHTML = `
+                <div class="prescription-item">
+                    <div class="prescription-date">2024-03-15</div>
+                    <div class="prescription-details">
+                        <strong>Medication:</strong> Sample Medication
+                        <br>
+                        <strong>Dosage:</strong> 1 tablet daily
+                        <br>
+                        <strong>Duration:</strong> 7 days
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html> 

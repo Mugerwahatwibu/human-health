@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - HUMAN HEALTH</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1><i class="fas fa-heartbeat"></i> HUMAN HEALTH</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="working-days.html">Working Days</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="medical-records.html">Medical Records</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="admin-section">
+        <div id="admin-login" class="admin-login">
+            <h2>Admin Login</h2>
+            <form id="admin-login-form" class="admin-form">
+                <div class="form-group">
+                    <input type="text" id="admin-username" name="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="admin-password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+        </div>
+
+        <div id="admin-dashboard" class="admin-dashboard" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Admin Dashboard</h2>
+                <div class="dashboard-actions">
+                    <button onclick="exportData()" class="action-button">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button onclick="showStatistics()" class="action-button">
+                        <i class="fas fa-chart-bar"></i> Statistics
+                    </button>
+                    <button onclick="logout()" class="logout-button">Logout</button>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Appointments</h3>
+                        <div class="filter-controls">
+                            <input type="text" id="appointment-search" placeholder="Search appointments..." onkeyup="filterAppointments()">
+                            <select id="appointment-status-filter" onchange="filterAppointments()">
+                                <option value="all">All Status</option>
+                                <option value="scheduled">Scheduled</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('appointments', 'date')">Date <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('appointments', 'name')">Name <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('appointments', 'email')">Email <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('appointments', 'phone')">Phone <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('appointments', 'service')">Service <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('appointments', 'status')">Status <i class="fas fa-sort"></i></th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Content will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Registered Users</h3>
+                        <div class="filter-controls">
+                            <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers()">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="users-table">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('users', 'name')">Name <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('users', 'email')">Email <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('users', 'phone')">Phone <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('users', 'createdAt')">Registration Date <i class="fas fa-sort"></i></th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Content will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Medical Records</h3>
+                        <div class="filter-controls">
+                            <input type="text" id="records-search" placeholder="Search records..." onkeyup="filterRecords()">
+                            <select id="records-status-filter" onchange="filterRecords()">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="no-history">No History</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="records-table">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('records', 'name')">Name <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('records', 'email')">Email <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('records', 'lastVisit')">Last Visit <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortTable('records', 'status')">Status <i class="fas fa-sort"></i></th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Content will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Record View Modal -->
+    <div id="record-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeRecordModal()">&times;</span>
+            <h2>Patient Records</h2>
+            <div id="record-details">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div id="statistics-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeStatisticsModal()">&times;</span>
+            <h2>Dashboard Statistics</h2>
+            <div class="statistics-grid">
+                <div class="stat-card">
+                    <h3>Total Appointments</h3>
+                    <p id="total-appointments">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p id="total-users">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Patients</h3>
+                    <p id="active-patients">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed Appointments</h3>
+                    <p id="completed-appointments">0</p>
+                </div>
+            </div>
+            <div class="statistics-chart">
+                <canvas id="appointments-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Delivering quality healthcare services to you all.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Admin credentials
+        const ADMIN_CREDENTIALS = {
+            username: 'Admin',
+            password: 'Admin256'
+        };
+
+        let currentSort = {
+            column: null,
+            direction: 'asc'
+        };
+
+        // Check if admin is logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn');
+            if (isAdminLoggedIn === 'true') {
+                showDashboard();
+            }
+        });
+
+        // Handle admin login
+        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showDashboard();
+            } else {
+                alert('Invalid admin credentials');
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+            loadDashboardData();
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            document.getElementById('admin-login').style.display = 'block';
+            document.getElementById('admin-dashboard').style.display = 'none';
+        }
+
+        function loadDashboardData() {
+            loadAppointments();
+            loadUsers();
+            loadRecords();
+        }
+
+        function loadAppointments() {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const appointmentsTable = document.querySelector('#appointments-table tbody');
+            appointmentsTable.innerHTML = appointments.map(apt => `
+                <tr>
+                    <td>${new Date(apt.date).toLocaleDateString()}</td>
+                    <td>${apt.name}</td>
+                    <td>${apt.email}</td>
+                    <td>${apt.phone}</td>
+                    <td>${apt.service}</td>
+                    <td><span class="status-badge status-${apt.status.toLowerCase()}">${apt.status}</span></td>
+                    <td>
+                        <button onclick="updateAppointmentStatus('${apt.id}', 'completed')" class="edit-btn" title="Mark as Completed">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button onclick="updateAppointmentStatus('${apt.id}', 'cancelled')" class="delete-btn" title="Cancel Appointment">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button onclick="viewAppointmentDetails('${apt.id}')" class="view-btn" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const usersTable = document.querySelector('#users-table tbody');
+            usersTable.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <button onclick="viewUserRecords('${user.email}')" class="edit-btn" title="View Records">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="editUser('${user.email}')" class="edit-btn" title="Edit User">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadRecords() {
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const recordsTable = document.querySelector('#records-table tbody');
+            recordsTable.innerHTML = users.map(user => {
+                const userAppointments = appointments.filter(apt => apt.email === user.email);
+                const lastVisit = userAppointments.length > 0 
+                    ? new Date(userAppointments[userAppointments.length - 1].date).toLocaleDateString()
+                    : 'No visits';
+                return `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${lastVisit}</td>
+                        <td>${userAppointments.length > 0 ? 'Active' : 'No History'}</td>
+                        <td>
+                            <button onclick="viewUserRecords('${user.email}')" class="edit-btn" title="View Records">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="downloadRecords('${user.email}')" class="edit-btn" title="Download Records">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateAppointmentStatus(appointmentId, newStatus) {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const appointmentIndex = appointments.findIndex(apt => apt.id === appointmentId);
+            
+            if (appointmentIndex !== -1) {
+                appointments[appointmentIndex].status = newStatus;
+                localStorage.setItem('appointments', JSON.stringify(appointments));
+                loadDashboardData();
+            }
+        }
+
+        function viewUserRecords(email) {
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const user = users.find(u => u.email === email);
+            const userAppointments = appointments.filter(apt => apt.email === email);
+
+            const modal = document.getElementById('record-modal');
+            const details = document.getElementById('record-details');
+
+            details.innerHTML = `
+                <div class="record-section">
+                    <h3>Patient Information</h3>
+                    <p><strong>Name:</strong> ${user.name}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                    <p><strong>Phone:</strong> ${user.phone}</p>
+                    <p><strong>Registration Date:</strong> ${new Date(user.createdAt).toLocaleDateString()}</p>
+                </div>
+                <div class="record-section">
+                    <h3>Visit History</h3>
+                    ${userAppointments.length > 0 ? `
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${userAppointments.map(apt => `
+                                    <tr>
+                                        <td>${new Date(apt.date).toLocaleDateString()}</td>
+                                        <td>${apt.service}</td>
+                                        <td><span class="status-badge status-${apt.status.toLowerCase()}">${apt.status}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    ` : '<p>No visit history available</p>'}
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        function closeRecordModal() {
+            document.getElementById('record-modal').style.display = 'none';
+        }
+
+        function showStatistics() {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+
+            const modal = document.getElementById('statistics-modal');
+            document.getElementById('total-appointments').textContent = appointments.length;
+            document.getElementById('total-users').textContent = users.length;
+            document.getElementById('active-patients').textContent = 
+                users.filter(user => appointments.some(apt => apt.email === user.email)).length;
+            document.getElementById('completed-appointments').textContent = 
+                appointments.filter(apt => apt.status === 'completed').length;
+
+            // Create appointments chart
+            const ctx = document.getElementById('appointments-chart').getContext('2d');
+            const statusCounts = {
+                scheduled: appointments.filter(apt => apt.status === 'scheduled').length,
+                completed: appointments.filter(apt => apt.status === 'completed').length,
+                cancelled: appointments.filter(apt => apt.status === 'cancelled').length
+            };
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Scheduled', 'Completed', 'Cancelled'],
+                    datasets: [{
+                        data: [statusCounts.scheduled, statusCounts.completed, statusCounts.cancelled],
+                        backgroundColor: ['#f1c40f', '#2ecc71', '#e74c3c']
+                    }]
+                }
+            });
+
+            modal.style.display = 'block';
+        }
+
+        function closeStatisticsModal() {
+            document.getElementById('statistics-modal').style.display = 'none';
+        }
+
+        function exportData() {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            
+            const data = {
+                appointments,
+                users,
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `healthcare-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function sortTable(tableType, column) {
+            const table = document.getElementById(`${tableType}-table`);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+
+            rows.sort((a, b) => {
+                const aValue = a.children[getColumnIndex(tableType, column)].textContent;
+                const bValue = b.children[getColumnIndex(tableType, column)].textContent;
+
+                if (column === 'date' || column === 'createdAt' || column === 'lastVisit') {
+                    return currentSort.direction === 'asc' 
+                        ? new Date(aValue) - new Date(bValue)
+                        : new Date(bValue) - new Date(aValue);
+                }
+
+                return currentSort.direction === 'asc'
+                    ? aValue.localeCompare(bValue)
+                    : bValue.localeCompare(aValue);
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function getColumnIndex(tableType, column) {
+            const columnMap = {
+                appointments: {
+                    date: 0, name: 1, email: 2, phone: 3, service: 4, status: 5
+                },
+                users: {
+                    name: 0, email: 1, phone: 2, createdAt: 3
+                },
+                records: {
+                    name: 0, email: 1, lastVisit: 2, status: 3
+                }
+            };
+            return columnMap[tableType][column];
+        }
+
+        function filterAppointments() {
+            const searchTerm = document.getElementById('appointment-search').value.toLowerCase();
+            const statusFilter = document.getElementById('appointment-status-filter').value;
+            const rows = document.querySelectorAll('#appointments-table tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const status = row.querySelector('.status-badge').textContent.toLowerCase();
+                const matchesSearch = text.includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || status === statusFilter;
+                row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+            });
+        }
+
+        function filterUsers() {
+            const searchTerm = document.getElementById('user-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#users-table tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterRecords() {
+            const searchTerm = document.getElementById('records-search').value.toLowerCase();
+            const statusFilter = document.getElementById('records-status-filter').value;
+            const rows = document.querySelectorAll('#records-table tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const status = row.children[3].textContent.toLowerCase();
+                const matchesSearch = text.includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || status === statusFilter;
+                row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+            });
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 
